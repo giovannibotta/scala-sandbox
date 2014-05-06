@@ -1,0 +1,43 @@
+apply plugin: 'idea'
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'scala'
+    apply plugin: 'scalatest'
+
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        // needed for Scala stuff
+        maven {
+            url "http://repo.typesafe.com/typesafe/releases/"
+        }
+    }
+
+    dependencies {
+        compile 'org.scala-lang:scala-library:2.11.0'
+
+        testCompile 'org.scalatest:scalatest_2.11:2.0'
+        testRuntime 'org.pegdown:pegdown:1.1.0'
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.maiflai:gradle-scalatest:0.2'
+    }
+}
+
+idea {
+    project {
+        ipr.withXml { provider ->
+            provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@directory = '$PROJECT_DIR$'
+            provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
+        }
+    }
+}
